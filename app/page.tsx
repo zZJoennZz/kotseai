@@ -1,65 +1,105 @@
-import Image from "next/image";
+// app/page.tsx
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
+  const [make, setMake] = useState('');
+  const [model, setModel] = useState('');
+  const [year, setYear] = useState('');
+  const [mile, setMile] = useState('');
+  const [loc, setLoc] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const res = await fetch('/api/get-maintenance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        make,
+        model,
+        year,
+        mileage: mile,
+        location: loc,
+      }),
+    });
+
+    if (!res.ok) {
+      alert('May error sa server :(');
+      return;
+    }
+
+    const data = await res.json();
+    console.log('AI checklist:', data.maintenance); // TODO: display this
+    const checklist = data.maintenance;
+    router.push(`/maintenance-result?data=${encodeURIComponent(JSON.stringify(checklist))}`);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className="min-h-screen bg-gradient-to-br from-yellow-300 to-orange-500 text-gray-900 flex flex-col items-center justify-center p-6">
+      <section className="max-w-2xl w-full text-center">
+        <h1 className="text-5xl md:text-6xl font-black drop-shadow-md">
+          Kotse<span className="text-black">AI</span>
+        </h1>
+        <p className="mt-3 text-lg md:text-xl">I-enter ang kotse mo, ibigay ng AI ang tamang maintenance—parang barkada mong mekaniko!</p>
+      </section>
+
+      <form onSubmit={handleSubmit} className="mt-8 w-full max-w-xl bg-white/90 backdrop-blur rounded-2xl shadow-lg p-6 space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input
+            required
+            type="text"
+            placeholder="Make (e.g. Toyota)"
+            value={make}
+            onChange={(e) => setMake(e.target.value)}
+            className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          <input
+            required
+            type="text"
+            placeholder="Model (e.g. Vios)"
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          <input
+            required
+            type="number"
+            min={1980}
+            max={2026}
+            placeholder="Year"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          <input
+            required
+            type="number"
+            placeholder="Kilometro ngayon"
+            value={mile}
+            onChange={(e) => setMile(e.target.value)}
+            className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+        </div>
+
+        <input
+          required
+          type="text"
+          placeholder="Lugar (e.g. Quezon City)"
+          value={loc}
+          onChange={(e) => setLoc(e.target.value)}
+          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+        <button type="submit" className="w-full bg-black text-yellow-300 font-bold py-3 rounded-lg hover:bg-gray-800 transition">
+          Gawin ang Maintenance List
+        </button>
+      </form>
+
+      <footer className="mt-12 text-sm opacity-80">Used LLM: Gemini 2.0 Flash. Please contact a mechanic first!</footer>
+    </main>
   );
 }
