@@ -52,7 +52,7 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
 
         <div className="mt-8 text-center">
           <Link href="/" className="inline-block bg-black text-yellow-300 px-5 py-2 rounded-lg hover:bg-gray-800 transition">
-            Gumanap ng panibago →
+            Submit New →
           </Link>
         </div>
       </div>
