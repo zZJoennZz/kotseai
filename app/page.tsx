@@ -99,7 +99,10 @@ export default function Home() {
         </button>
       </form>
 
-      <footer className="mt-12 text-sm opacity-80">Used LLM: Gemini 2.0 Flash. Please contact a mechanic first!</footer>
+      <footer className="mt-12 text-sm opacity-80">
+        <div>Used LLM: Gemini 2.0 Flash. Please contact a mechanic first before proceeding with the maintenance provided!</div>
+        <div className="mt-5">Developed by Joenn Aquilino</div>
+      </footer>
     </main>
   );
 }
