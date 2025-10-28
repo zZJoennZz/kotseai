@@ -36,6 +36,8 @@ Vehicle:
 - Year:  ${year}
 - Current odometer: ${mileage} km
 - Location: ${location} (use local climate/road-salt/dust/altitude to pick severe-service schedule when applicable)
+- Make sure the information is from the Philippines as much as possible
+- For transmission related maintenance, please provide both automatic and manual
 
 Instructions
 1. List only maintenance items due NOW or within the next 5 000 km.

@@ -41,7 +41,7 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
               </p>
               <p className="text-xs text-gray-500 mt-1">{it.interval}</p>
               <p className="text-sm text-gray-700 mt-2">{it.reason}</p>
-              <DiyCarousel make={make} model={model} component={it.component} action={it.action} />
+              <DiyCarousel make={year + ' ' + make} model={model} component={it.component} action={it.action} />
             </li>
           ))}
         </ul>
