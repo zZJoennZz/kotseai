@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import DiyCarousel from '../components/DiyCarousel';
 
 type Item = {
   component: string;
@@ -12,12 +13,19 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
   const raw = search.get('data');
   if (!raw) return <NoData />;
 
-  let checklist: { immediate: Item[]; soon: Item[]; later: Item[] };
+  let payload: {
+    make: string;
+    model: string;
+    year: string;
+    checklist: { immediate: Item[]; soon: Item[]; later: Item[] };
+  };
   try {
-    checklist = JSON.parse(decodeURIComponent(raw));
+    payload = JSON.parse(decodeURIComponent(raw));
   } catch {
     return <NoData />;
   }
+
+  const { make, model, year, checklist } = payload;
 
   const Section = ({ title, items, color }: { title: string; items: Item[]; color: string }) => (
     <section className="mb-6">
@@ -33,6 +41,7 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
               </p>
               <p className="text-xs text-gray-500 mt-1">{it.interval}</p>
               <p className="text-sm text-gray-700 mt-2">{it.reason}</p>
+              <DiyCarousel make={make} model={model} component={it.component} action={it.action} />
             </li>
           ))}
         </ul>
@@ -43,7 +52,9 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
   return (
     <main className="min-h-screen bg-gradient-to-br from-yellow-300 to-orange-500 text-gray-900 p-6">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-black mb-2">KotseAI Checklist</h1>
+        <h1 className="text-4xl font-black mb-2">
+          {year} {make} {model} · Maintenance Checklist
+        </h1>
         <p className="mb-6">Narito ang mga kailangan mong gawin:</p>
 
         <Section title="🚨 AGAD NA GAWIN" items={checklist.immediate} color="text-red-700" />
