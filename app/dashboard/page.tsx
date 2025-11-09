@@ -58,6 +58,7 @@ export default function DashboardPage() {
       make: checklist.make || '',
       model: checklist.model || '',
       year: checklist.year || '',
+      transmission: checklist.transmission || '',
       mileage: checklist.mileage || 0,
       checklist: {
         immediate: checklist.data?.immediate || [],
