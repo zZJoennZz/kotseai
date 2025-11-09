@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import DiyCarousel from '../components/DiyCarousel';
+import CostEstimator from '../components/CostEstimator';
 
 type Item = {
   component: string;
@@ -16,7 +17,9 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
   let payload: {
     make: string;
     model: string;
+    transmission: string;
     year: string;
+    mileage: number;
     checklist: { immediate: Item[]; soon: Item[]; later: Item[] };
   };
   try {
@@ -25,7 +28,7 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
     return <NoData />;
   }
 
-  const { make, model, year, checklist } = payload;
+  const { make, model, year, mileage, checklist, transmission } = payload;
 
   const Section = ({ title, items, color }: { title: string; items: Item[]; color: string }) => (
     <section className="mb-6">
@@ -41,7 +44,7 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
               </p>
               <p className="text-xs text-gray-500 mt-1">{it.interval}</p>
               <p className="text-sm text-gray-700 mt-2">{it.reason}</p>
-              <DiyCarousel make={year + ' ' + make} model={model} component={it.component} action={it.action} />
+              {/* <DiyCarousel make={year + ' ' + make} model={model} component={it.component} action={it.action} /> */}
             </li>
           ))}
         </ul>
@@ -53,13 +56,23 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
     <main className="min-h-screen bg-gradient-to-br from-yellow-300 to-orange-500 text-gray-900 p-6">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl font-black mb-2">
-          {year} {make} {model} · Maintenance Checklist
+          {year} {make} {model} ({transmission}) with {mileage} km · Maintenance Checklist
         </h1>
         <p className="mb-6">Narito ang mga kailangan mong gawin:</p>
 
         <Section title="🚨 AGAD NA GAWIN" items={checklist.immediate} color="text-red-700" />
         <Section title="📅 SA SUSUNOD NA 3 BUWAN" items={checklist.soon} color="text-orange-700" />
         <Section title="🗓️ SA SUSUNOD NA 6-12 BUWAN" items={checklist.later} color="text-gray-700" />
+
+        <CostEstimator
+          make={make}
+          model={model}
+          transmission={transmission}
+          year={year}
+          mileage={checklist.immediate?.[0]?.interval ?? ''}
+          location="Philippines"
+          checklist={checklist}
+        />
 
         <div className="mt-8 text-center">
           <Link href="/" className="inline-block bg-black text-yellow-300 px-5 py-2 rounded-lg hover:bg-gray-800 transition">
