@@ -93,7 +93,7 @@ async function getMaintenanceListUsingAI(
   return parsed;
 }
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const supabase = await createClient();
 
