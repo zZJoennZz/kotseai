@@ -7,59 +7,23 @@ export default function About() {
     <div className="p-10">
       <div className="max-w-3xl mx-auto bg-white/90 backdrop-blur rounded-2xl shadow-lg p-8 space-y-6">
         <h1 className="text-4xl font-black text-center text-gray-900">
-          Bakit Ko Ginawa ang <span className="text-orange-500">KotseAI</span>?
+          Why did I developed <span className="text-orange-500">KotseAI</span>?
         </h1>
 
         <div className="space-y-6 text-gray-700">
           <p className="text-lg leading-relaxed">
-            Noong una, nag-aalangan din ako: <strong>"May silbi ba talaga 'to? Hindi ba't mas maganda pa rin ang opinyon ng mekaniko?"</strong>
+            To be honest, I just want to develop to practice developing apps that utilizes LLM. I was having a problem thinking of ideas what do but
+            then, I have to do maintenance on my Mirage G4! I have the user's manual and booklet but I ain't reading all that! (Just kidding lmao!)
           </p>
 
           <p>
-            At tama kayo. <span className="font-semibold text-orange-600">Walang papalit sa experience ng isang magaling na mekaniko.</span>
+            Anyways, this app might not help much, but at least you have idea what to do. I recommend asking your mechanic or maybe your car guy/gal
+            friend about the checklist this app spouts to you. If you want to DIY, then I also added auto YouTube searching each item in the checklist
+            but it might not work sometimes because I ain't paying for that yet!
           </p>
 
           <div className="bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded-r-lg">
-            <p className="font-semibold text-gray-900">
-              Ang totoo: Hindi ito kalaban ng mekaniko. Ito ay <span className="text-orange-600">kasangkapan para sa'yo</span>.
-            </p>
-          </div>
-
-          <h2 className="text-2xl font-bold text-gray-900 mt-8">Ang Problema na Nakita Ko:</h2>
-
-          <div className="grid gap-3">
-            <div className="flex items-start space-x-3">
-              <div className="bg-orange-100 text-orange-600 rounded-full p-2 mt-1">
-                <span className="font-bold">!</span>
-              </div>
-              <p>
-                <strong>"Nasisingil ako nang sobra."</strong> - Dinala ko ang kotse para sa oil change, biglang may P5,000 na extra repairs
-              </p>
-            </div>
-            <div className="flex items-start space-x-3">
-              <div className="bg-orange-100 text-orange-600 rounded-full p-2 mt-1">
-                <span className="font-bold">!</span>
-              </div>
-              <p>
-                <strong>"Nakalimutan ko kung ano huling napalitan."</strong> - Hindi ko matandaan kung kailan huling pinalitan ang brake fluid
-              </p>
-            </div>
-            <div className="flex items-start space-x-3">
-              <div className="bg-orange-100 text-orange-600 rounded-full p-2 mt-1">
-                <span className="font-bold">!</span>
-              </div>
-              <p>
-                <strong>"Nahihiya akong magtanong."</strong> - Parang ang bobo ng tanong ko sa mekaniko
-              </p>
-            </div>
-            <div className="flex items-start space-x-3">
-              <div className="bg-orange-100 text-orange-600 rounded-full p-2 mt-1">
-                <span className="font-bold">!</span>
-              </div>
-              <p>
-                <strong>"Nalilito ako sa manual."</strong> - 100 pages, generic, hindi para sa driving conditions sa Pilipinas
-              </p>
-            </div>
+            <p className="font-semibold text-gray-900">I just hope this app helps you one way or another. Have a good life!</p>
           </div>
 
           <h2 className="text-2xl font-bold text-gray-900 mt-8">Paano Ito Makakatulong:</h2>

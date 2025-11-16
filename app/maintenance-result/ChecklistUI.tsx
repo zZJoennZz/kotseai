@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import DiyCarousel from '../components/DiyCarousel';
 import CostEstimator from '../components/CostEstimator';
+import formatNumber from '../lib/helpers/formatNumber';
 
 type Item = {
   component: string;
@@ -10,18 +11,29 @@ type Item = {
   reason: string;
 };
 
+type ChecklistItem = {
+  component: string;
+  action: string;
+  interval: string;
+  reason: string;
+};
+
+type ChecklistData = {
+  make: string;
+  model: string;
+  transmission: string;
+  year: string;
+  mileage: number;
+  lastMaintenanceKm?: string;
+  lastMaintenanceDate?: string;
+  checklist: { immediate: Item[]; soon: Item[]; later: Item[] };
+};
+
 export default function ChecklistUI({ search }: { search: URLSearchParams }) {
   const raw = search.get('data');
   if (!raw) return <NoData />;
 
-  let payload: {
-    make: string;
-    model: string;
-    transmission: string;
-    year: string;
-    mileage: number;
-    checklist: { immediate: Item[]; soon: Item[]; later: Item[] };
-  };
+  let payload: ChecklistData;
   try {
     payload = JSON.parse(decodeURIComponent(raw));
   } catch {
@@ -29,6 +41,69 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
   }
 
   const { make, model, year, mileage, checklist, transmission } = payload;
+
+  const handlePrint = (checklist: any) => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Failed to open print window. Please allow popups.');
+      return;
+    }
+
+    const doc = printWindow.document;
+
+    const html = doc.createElement('html');
+    const head = doc.createElement('head');
+    const style = doc.createElement('style');
+    style.textContent = `
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { color: #333; }
+    .section { margin-bottom: 20px; }
+    .item { padding: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+    .cost-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .cost-table th, .cost-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+  `;
+    head.appendChild(style);
+    html.appendChild(head);
+
+    const body = doc.createElement('body');
+    const title = doc.createElement('h1');
+    title.textContent = `${checklist.year} ${checklist.make} ${checklist.model} (with ${formatNumber(checklist.mileage)} km) Maintenance Checklist`;
+    body.appendChild(title);
+
+    const createSection = (label: string, items: ChecklistItem[]): HTMLElement => {
+      const section = doc.createElement('div');
+      section.className = 'section';
+
+      const heading = doc.createElement('h2');
+      heading.textContent = label;
+      section.appendChild(heading);
+
+      items.forEach((item) => {
+        const div = doc.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+        <p><strong>${item.component}</strong> - ${item.action}</p>
+        <p>Interval: ${item.interval}</p>
+        <p>${item.reason}</p>
+      `;
+        section.appendChild(div);
+      });
+
+      return section;
+    };
+
+    body.appendChild(createSection('Immediate', checklist.checklist.immediate));
+    body.appendChild(createSection('Soon (Sa susunod na 3 buwan)', checklist.checklist.soon));
+    body.appendChild(createSection('Later (Sa susunod na 6-12 buwan)', checklist.checklist.later));
+
+    html.appendChild(body);
+    doc.documentElement.replaceWith(html);
+
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
+  };
 
   const Section = ({ title, items, color }: { title: string; items: Item[]; color: string }) => (
     <section className="mb-6">
@@ -56,8 +131,23 @@ export default function ChecklistUI({ search }: { search: URLSearchParams }) {
     <main className="min-h-screen bg-gradient-to-br from-yellow-300 to-orange-500 text-gray-900 p-6">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl font-black mb-2">
-          {year} {make} {model} ({transmission}) with {mileage} km · Maintenance Checklist
+          {year} {make} {model} ({transmission}) with {formatNumber(mileage)} km · Maintenance Checklist
         </h1>
+        {(payload.lastMaintenanceKm || payload.lastMaintenanceDate) && (
+          <p className="text-sm text-gray-700 mb-4">
+            Last maintenance:
+            {payload.lastMaintenanceKm && ` ${formatNumber(parseInt(payload.lastMaintenanceKm))} km`}
+            {payload.lastMaintenanceDate && ` on ${new Date(payload.lastMaintenanceDate).toLocaleDateString()}`}
+          </p>
+        )}
+        <div className="py-3">
+          <button
+            className="cursor-pointer bg-cyan-700 hover:bg-cyan-900 text-sm text-white py-2 px-3 rounded font-bold"
+            onClick={() => handlePrint(payload)}
+          >
+            🖨️ Print Checklist
+          </button>
+        </div>
         <p className="mb-6">Narito ang mga kailangan mong gawin:</p>
 
         <Section title="🚨 AGAD NA GAWIN" items={checklist.immediate} color="text-red-700" />

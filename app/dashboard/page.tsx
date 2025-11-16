@@ -164,7 +164,10 @@ export default function DashboardPage() {
         </div>
 
         <div className="text-center mt-8">
-          <button className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg transition" onClick={handleLogout}>
+          <button
+            className="cursor-pointer bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-lg transition"
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>

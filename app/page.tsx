@@ -15,74 +15,167 @@ export default function Home() {
   const [loc, setLoc] = useState('');
   const [loading, setLoading] = useState(false);
   const [availableModels, setAvailableModels] = useState<string[]>([]);
+  const [lastMaintenanceKm, setLastMaintenanceKm] = useState('');
+  const [lastMaintenanceDate, setLastMaintenanceDate] = useState('');
   const authContext = useContext(AuthContext);
 
   const carsList = {
-    Toyota: [
-      'Corolla',
-      'Corona',
-      'Tamaraw FX',
-      'Tamaraw FX (Diesel)',
-      'LiteAce',
-      'HiAce (Diesel)',
-      'Hilux (Diesel)',
-      'Camry',
-      'Vios',
-      'Wigo',
-      'Avanza',
-      'Innova',
-      'Innova (Diesel)',
-      'Fortuner',
-      'Fortuner (Diesel)',
-      'Raize',
+    Abarth: ['595 (Gasoline)'],
+    'Alfa Romeo': ['Giulia (Gasoline)', 'Stelvio (Gasoline)'],
+    Audi: ['A4 (Gasoline)', 'A6 (Gasoline)', 'Q3 (Gasoline)', 'Q5 (Gasoline)'],
+    Austin: ['Mini (Gasoline)'],
+    BMW: ['3 Series (Gasoline)', '5 Series (Gasoline)', 'X1 (Gasoline)', 'X3 (Gasoline)', 'X5 (Gasoline)'],
+    BYD: ['Dolphin (Electric)', 'Han (Gasoline/Electric hybrid)', 'Tang (Electric)', 'e-MAX 9 (Electric)'],
+    Chery: ['Tiggo 2 (Gasoline)', 'Tiggo 5x (Gasoline)', 'Tiggo 8 (Gasoline)'],
+    Chevrolet: ['Camaro (Gasoline)', 'Cruze (Gasoline)', 'Optra (Gasoline)', 'Spark (Gasoline)', 'Tracker (Gasoline)', 'Trailblazer (Diesel)'],
+    Datsun: ['Bluebird (Gasoline)', 'Cedric (Gasoline)'],
+    Fiat: ['500 (Gasoline)'],
+    Ford: [
+      'Cortina (Gasoline)',
+      'Escape (Gasoline)',
+      'Escort (Gasoline)',
+      'Everest (Diesel)',
+      'Focus (Gasoline)',
+      'Lynx (Gasoline)',
+      'Mustang (Gasoline)',
+      'Ranger (Diesel)',
+      'Raptor (Diesel)',
+      'Territory (Gasoline)',
     ],
+    Foton: ['Gratour (Diesel)', 'Thunder (Diesel)', 'Toano (Diesel)'],
+    GAC: ['Aion V (Electric)', 'GS3 (Gasoline)', 'GS8 (Gasoline)'],
+    Geely: ['Coolray (Gasoline)', 'Emgrand (Gasoline)', 'Okavango (Gasoline)'],
+    Honda: [
+      'Accord (Gasoline)',
+      'BR-V (Gasoline)',
+      'CR-V (Diesel)',
+      'CR-V (Gasoline)',
+      'City (Gasoline)',
+      'Civic (Gasoline)',
+      'HR-V (Gasoline)',
+      'Jazz (Gasoline)',
+      'Prelude (Gasoline)',
+    ],
+    Hyundai: [
+      'Accent (Gasoline)',
+      'Creta (Gasoline)',
+      'Elantra (Gasoline)',
+      'Santa Fe (Gasoline)',
+      'Santa Fe (Diesel)',
+      'Starex (Diesel)',
+      'Staria (Diesel)',
+      'Stargazer (Gasoline)',
+      'Tucson (Diesel)',
+      'Tucson (Gasoline)',
+    ],
+    Isuzu: [
+      'Bellet (Gasoline)',
+      'Crosswind (Diesel)',
+      'D-Max (Diesel)',
+      'Gemini (Diesel)',
+      'Gemini (Gasoline)',
+      'Hi-Lander (Diesel)',
+      'Traviz (Diesel)',
+      'Trooper (Diesel)',
+      'mu-X (Diesel)',
+    ],
+    Jetour: ['T1 Lightning (Electric)', 'X70 (Gasoline)'],
+    Kia: [
+      'Carnival (Diesel)',
+      'Pride (Gasoline)',
+      'Rio (Gasoline)',
+      'Seltos (Gasoline)',
+      'Sonet (Gasoline)',
+      'Sorento (Diesel)',
+      'Sorento (Gasoline)',
+      'Sportage (Gasoline)',
+    ],
+    'Land Rover': ['Defender (Diesel)', 'Discovery (Gasoline)', 'Range Rover Evoque (Gasoline)'],
+    MG: ['MG 5 (Gasoline)', 'MG GT (Gasoline)', 'MG ZS (Gasoline)'],
+    Mazda: [
+      '323 (Gasoline)',
+      '626 (Gasoline)',
+      'B2200 (Diesel)',
+      'BT-50 (Diesel)',
+      'CX-5 (Diesel)',
+      'CX-5 (Gasoline)',
+      'CX-9 (Gasoline)',
+      'Familia (Gasoline)',
+      'Mazda3 (Gasoline)',
+    ],
+    'Mercedes-Benz': ['180D (Diesel)', 'A-Class (Gasoline)', 'C-Class (Gasoline)', 'E-Class (Gasoline)', 'GLE-Class (Gasoline)'],
+    Mini: ['Cooper (Gasoline)', 'Countryman (Gasoline)'],
     Mitsubishi: [
-      'Lancer',
-      'Galant',
-      'Pajero',
-      'Pajero (Diesel)',
-      'Adventure',
       'Adventure (Diesel)',
+      'Adventure (Gasoline)',
+      'Colt (Diesel)',
+      'Colt (Gasoline)',
+      'Galant (Gasoline)',
       'L300 (Diesel)',
+      'Lancer (Gasoline)',
+      'Mirage (Gasoline)',
       'Montero Sport (Diesel)',
-      'Mirage',
-      'Xpander',
+      'Pajero (Diesel)',
+      'Pajero (Gasoline)',
+      'Xpander (Gasoline)',
     ],
-    Nissan: ['Sunny', 'Sentra', 'Patrol', 'Patrol (Diesel)', 'Terrano', 'Terrano (Diesel)', 'X-Trail', 'Navara (Diesel)', 'Almera', 'Terra (Diesel)'],
-    Honda: ['Civic', 'Accord', 'City', 'CR-V', 'CR-V (Diesel)', 'Jazz', 'HR-V', 'BR-V'],
-    Isuzu: ['Gemini', 'Gemini (Diesel)', 'Hi-Lander (Diesel)', 'Crosswind (Diesel)', 'D-Max (Diesel)', 'mu-X (Diesel)', 'Traviz (Diesel)'],
-    Mazda: ['323', '626', 'B2200 (Diesel)', 'CX-5', 'CX-5 (Diesel)', 'CX-9', 'Mazda3', 'BT-50 (Diesel)'],
-    Suzuki: ['Alto', 'Swift', 'Jimny', 'Vitara', 'Vitara (Diesel)', 'Ertiga', 'S-Presso', 'Dzire'],
-    Hyundai: ['Accent', 'Elantra', 'Starex (Diesel)', 'Tucson', 'Tucson (Diesel)', 'Santa Fe', 'Santa Fe (Diesel)', 'Stargazer', 'Creta'],
-    Kia: ['Pride', 'Sportage', 'Rio', 'Sorento', 'Sorento (Diesel)', 'Seltos', 'Sonet', 'Carnival (Diesel)'],
-    Ford: ['Escort', 'Lynx', 'Everest (Diesel)', 'Escape', 'Focus', 'Ranger (Diesel)', 'Raptor (Diesel)', 'Territory', 'Mustang'],
-    Chevrolet: ['Optra', 'Spark', 'Cruze', 'Trailblazer (Diesel)', 'Tracker', 'Camaro'],
-    Volkswagen: ['Beetle', 'Golf', 'Jetta', 'Tiguan', 'Santana'],
-    BMW: ['3 Series', '5 Series', 'X1', 'X3', 'X5'],
-    'Mercedes-Benz': ['E-Class', 'C-Class', 'GLE-Class', 'A-Class'],
-    Audi: ['A4', 'A6', 'Q3', 'Q5'],
-    Peugeot: ['206', '3008', '5008', '2008'],
-    Volvo: ['S40', 'S60', 'XC60', 'XC90'],
-    'Land Rover': ['Defender', 'Discovery', 'Range Rover Evoque'],
-    Mini: ['Cooper', 'Countryman'],
-    Fiat: ['500'],
-    'Alfa Romeo': ['Giulia', 'Stelvio'],
-    Abarth: ['595'],
-    MG: ['MG 5', 'MG ZS', 'MG GT'],
-    Geely: ['Coolray', 'Okavango', 'Emgrand'],
-    Chery: ['Tiggo 2', 'Tiggo 5x', 'Tiggo 8'],
-    GAC: ['GS3', 'GS8', 'Aion V'],
-    Jetour: ['X70', 'T1 Lightning'],
-    BYD: ['Dolphin', 'Han', 'Tang', 'e-MAX 9'],
-    Foton: ['Thunder', 'Gratour', 'Toano'],
-    'Tata Motors': ['Super Ace', 'Xenon'],
+    Nissan: [
+      'Almera (Gasoline)',
+      'Cedric (Gasoline)',
+      'Navara (Diesel)',
+      'Patrol (Diesel)',
+      'Patrol (Gasoline)',
+      'Sentra (Gasoline)',
+      'Sunny (Gasoline)',
+      'Terra (Diesel)',
+      'Terrano (Diesel)',
+      'Terrano (Gasoline)',
+      'X-Trail (Gasoline)',
+    ],
+    Peugeot: ['2008 (Gasoline)', '206 (Gasoline)', '3008 (Gasoline)', '5008 (Gasoline)'],
+    Suzuki: [
+      'Alto (Gasoline)',
+      'Dzire (Gasoline)',
+      'Ertiga (Gasoline)',
+      'Jimny (Gasoline)',
+      'Swift (Gasoline)',
+      'S-Presso (Gasoline)',
+      'Vitara (Diesel)',
+      'Vitara (Gasoline)',
+    ],
+    'Tata Motors': ['Super Ace (Diesel)', 'Xenon (Diesel)'],
+    Toyota: [
+      'Avanza (Gasoline)',
+      'Camry (Gasoline)',
+      'Corolla (Gasoline)',
+      'Corona (Diesel)',
+      'Corona (Gasoline)',
+      'Fortuner (Diesel)',
+      'Fortuner (Gasoline)',
+      'HiAce (Diesel)',
+      'HiAce (Gasoline)',
+      'Hilux (Diesel)',
+      'Hilux (Gasoline)',
+      'Innova (Diesel)',
+      'Innova (Gasoline)',
+      'Land Cruiser (Gasoline)',
+      'Land Cruiser (Diesel)',
+      'LiteAce (Gasoline)',
+      'MasterAce (Gasoline)',
+      'Raize (Gasoline)',
+      'Tamaraw FX (Diesel)',
+      'Tamaraw FX (Gasoline)',
+      'Vios (Gasoline)',
+      'Wigo (Gasoline)',
+    ],
+    Volkswagen: ['Beetle (Gasoline)', 'Golf (Gasoline)', 'Jetta (Gasoline)', 'Kombi (Diesel)', 'Santana (Gasoline)', 'Tiguan (Gasoline)'],
+    Volvo: ['S40 (Gasoline)', 'S60 (Gasoline)', 'XC60 (Gasoline)', 'XC90 (Gasoline)'],
   };
 
-  // Update available models when make changes
   useEffect(() => {
     if (make && carsList[make as keyof typeof carsList]) {
       setAvailableModels(carsList[make as keyof typeof carsList]);
-      setModel(''); // Reset model when make changes
+      setModel('');
     } else {
       setAvailableModels([]);
       setModel('');
@@ -103,6 +196,8 @@ export default function Home() {
       year,
       mileage: mile,
       location: loc,
+      lastMaintenanceKm,
+      lastMaintenanceDate,
     };
     try {
       const res = await fetch('/api/get-maintenance', {
@@ -162,7 +257,6 @@ export default function Home() {
               ))}
           </select>
 
-          {/* Model Dropdown */}
           <select
             required
             disabled={loading || !make}
@@ -225,6 +319,27 @@ export default function Home() {
           onChange={(e) => setLoc(e.target.value)}
           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50"
         />
+
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Last maintenance you remember</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input
+              disabled={loading}
+              type="number"
+              placeholder="Kilometro nung last maintenance"
+              value={lastMaintenanceKm}
+              onChange={(e) => setLastMaintenanceKm(e.target.value)}
+              className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50"
+            />
+            <input
+              disabled={loading}
+              type="date"
+              value={lastMaintenanceDate}
+              onChange={(e) => setLastMaintenanceDate(e.target.value)}
+              className="px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50"
+            />
+          </div>
+        </div>
 
         <button
           type="submit"

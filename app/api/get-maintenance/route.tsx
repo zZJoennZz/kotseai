@@ -33,7 +33,9 @@ async function getMaintenanceListUsingAI(
   year: string,
   mileage: string,
   location: string,
-  transmission: string
+  transmission: string,
+  lastMaintenanceKm?: string,
+  lastMaintenanceDate?: string
 ): Promise<MaintenanceJSON> {
   const prompt = `You are an ASE-certified master technician.
     Output MUST be pure JSON, no markdown, no commentary.
@@ -44,7 +46,9 @@ async function getMaintenanceListUsingAI(
     - Year:  ${year}
     - Transmission: ${transmission}
     - Current odometer: ${mileage} km
-    - Location: ${location} (use local climate/road-salt/dust/altitude to pick severe-service schedule when applicable)
+    - Location: ${location}
+    ${lastMaintenanceKm ? `- Last maintenance at: ${lastMaintenanceKm} km` : ''}
+    ${lastMaintenanceDate ? `- Last maintenance date: ${lastMaintenanceDate}` : ''}
     - Make sure the information is from the Philippines as much as possible
     - Assume the car is GAS unless something is mentioned
 
@@ -64,7 +68,8 @@ async function getMaintenanceListUsingAI(
       }
     5. Arrays may be empty; do not add extra keys.
     6. Output minified JSON on a single line, no back-ticks, no labels.
-    7. Make sure to provide specific maintenance for ${transmission}`;
+    7. Make sure to provide specific maintenance for ${transmission}
+    8. If possible, provide maintenance item based on their user manual/booklet`;
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.0-flash',
@@ -103,7 +108,7 @@ export async function POST(req: NextRequest) {
       error,
     } = await supabase.auth.getSession();
 
-    const { make, model, year, mileage, location, transmission } = await req.json();
+    const { make, model, year, mileage, location, transmission, lastMaintenanceKm, lastMaintenanceDate } = await req.json();
 
     if (!make || !model || !year || !mileage || !location || !transmission) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
@@ -115,7 +120,9 @@ export async function POST(req: NextRequest) {
       String(year).trim(),
       String(mileage).trim(),
       String(location).trim(),
-      String(transmission).trim()
+      String(transmission).trim(),
+      lastMaintenanceKm?.trim(),
+      lastMaintenanceDate?.trim()
     );
 
     if (session && !error) {
@@ -129,6 +136,8 @@ export async function POST(req: NextRequest) {
           year,
           mileage: parseInt(mileage),
           location,
+          last_maintenance_km: lastMaintenanceKm ? parseInt(lastMaintenanceKm) : null,
+          last_maintenance_date: lastMaintenanceDate || null,
           data: checklist,
           created_at: new Date().toISOString(),
         },
