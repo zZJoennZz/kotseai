@@ -72,7 +72,7 @@ async function getMaintenanceListUsingAI(
     8. If possible, provide maintenance item based on their user manual/booklet`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3-flash',
+    model: 'gemini-2.5-pro',
     contents: prompt,
     config: { temperature: 0.2, maxOutputTokens: 1000 },
   });
