@@ -35,7 +35,7 @@ async function getMaintenanceListUsingAI(
   location: string,
   transmission: string,
   lastMaintenanceKm?: string,
-  lastMaintenanceDate?: string
+  lastMaintenanceDate?: string,
 ): Promise<MaintenanceJSON> {
   const prompt = `You are an ASE-certified master technician.
     Output MUST be pure JSON, no markdown, no commentary.
@@ -72,7 +72,7 @@ async function getMaintenanceListUsingAI(
     8. If possible, provide maintenance item based on their user manual/booklet`;
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-3-flash',
     contents: prompt,
     config: { temperature: 0.2, maxOutputTokens: 1000 },
   });
@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
       String(location).trim(),
       String(transmission).trim(),
       lastMaintenanceKm?.trim(),
-      lastMaintenanceDate?.trim()
+      lastMaintenanceDate?.trim(),
     );
 
     if (session && !error) {
